@@ -41,7 +41,7 @@ namespace Spice.Controllers
 
             if(claim!=null)
             {
-                var cnt = _db.ShoppingCart.Where(u => u.ApplicationUserId == claim.Value).ToList().Count;
+                var cnt = await _db.ShoppingCart.Where(c => c.ApplicationUserId == claim.Value).SumAsync(c => c.Count);
                 HttpContext.Session.SetInt32(SD.ssShoppingCartCount, cnt);
             }
 
@@ -89,7 +89,7 @@ namespace Spice.Controllers
                 }
                 await _db.SaveChangesAsync();
 
-                var count = _db.ShoppingCart.Where(c => c.ApplicationUserId == CartObject.ApplicationUserId).ToList().Count();
+                var count = await _db.ShoppingCart.Where(s => s.ApplicationUserId == CartObject.ApplicationUserId).SumAsync(s => s.Count);
                 HttpContext.Session.SetInt32(SD.ssShoppingCartCount, count);
 
                 return RedirectToAction("Index");
